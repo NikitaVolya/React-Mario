@@ -2,16 +2,20 @@ import Vector2 from "./Vector2";
 
 class GameObject {
 
+    #game;
+
     #position;
     #id;
 
     static #globalId;
 
-    constructor(position) {
+    constructor(game, position) {
 
         this.#id = GameObject.#globalId++;
 
         this.SetPosition(position);
+
+        this.#game = game;
     }
 
     GetPosition() { return this.#position.Clone(); }
@@ -23,6 +27,8 @@ class GameObject {
     }
 
     GetId() { return this.#id; }
+
+    GetGame() { return this.#game; }
 
     Update(deltaTime) {
         if (typeof deltaTime !== "number" || Number.isNaN(deltaTime)) {

@@ -3,6 +3,7 @@ import WindowScreen from "./WindowScreen";
 
 import Vector2 from "../../assets/scripts/Vector2";
 import Player from "../../assets/scripts/entities/Player";
+import Gumba from "../../assets/scripts/entities/Gumba";
 
 
 class Game extends React.Component {
@@ -11,6 +12,7 @@ class Game extends React.Component {
         this,
         new Vector2(100, 100)
     );
+    #entites = [new Gumba(this, new Vector2(800, 100))];
     #keys = {};
     #frame;
 
@@ -31,10 +33,22 @@ class Game extends React.Component {
     render() {
         const Draw = (ctx) => {
             this.#player.Draw(ctx);
+
+            this.#entites.every(
+                entity => {
+                    entity.Draw(ctx);
+                }
+            )
         }
 
         const Update = (deltaTime) => {
             this.#player.Update(deltaTime);
+
+            this.#entites.every(
+                entity => {
+                    entity.Update(deltaTime);
+                }
+            )
 
             this.#frame++;
         };

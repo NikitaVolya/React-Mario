@@ -1,29 +1,35 @@
 import GameObject from "../GameObject";
 import Vector2 from "../Vector2";
+
 import GameSprite from "../GameSprite";
+import AnimationStateMachine from "./elements/AnimationStateMachine";
 
 
 class Entity extends GameObject {
 
-    static GravityVector = new Vector2(0, 675);
+    static GravityVector = new Vector2(0, 700);
 
     #velocity;
     #size;
     #speed = 40; 
+
     #sprite;
+    #animationStateMachine;
 
     #isOnFloar = false;
 
-    constructor(position, size) {
-        super(position);
+    constructor(game, position, size) {
+        super(game, position);
 
         if (!size || !(size instanceof  Vector2)) {
             throw new TypeError(`[${this.GetId()}] Entity.constructor : size must be a valid Vector2`);
         }
         this.#size = size;
 
-        this.#velocity = Vector2.Zero();
+        this.#velocity = Vector2.ZERO();
+
         this.#sprite = new GameSprite(this);
+        this.#animationStateMachine = new AnimationStateMachine(this);
     }
 
     Update(deltaTime) {
@@ -46,6 +52,8 @@ class Entity extends GameObject {
         }
 
         this.SetPosition(position);
+
+        this.#animationStateMachine.Update();
     }
 
     Draw(ctx) {
@@ -84,6 +92,7 @@ class Entity extends GameObject {
 
     GetSize() { return this.#size.Clone(); }
     GetSprite() { return this.#sprite; }
+    GetAnimationStateMachine() { return this.#animationStateMachine; }
 
     IsOnFloar() { return this.#isOnFloar; }
 }

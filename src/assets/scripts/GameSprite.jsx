@@ -1,3 +1,4 @@
+import Entity from "./entities/Entity";
 import Vector2 from "./Vector2";
 
 function drawSprite(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh, flipX = false) {
@@ -30,7 +31,9 @@ class GameSprite {
     #flip;
 
     constructor(owner) {
-
+        if (!owner || !(owner instanceof Entity)) {
+            throw new TypeError(`Owner [${this.#owner.GetId()}}] | GameSprite.Constructor : owner must be a valid Entity`);
+        }
         this.#owner = owner;
 
         this.#image = null;
@@ -116,8 +119,15 @@ class GameSprite {
         let position = this.#owner.GetPosition();
         let entitySize = this.#owner.GetSize();
 
+        
         let x = this.#frame % this.#spriteNumber.GetX();
-        let y = Math.floor(this.#frame / this.#spriteNumber.GetY());
+
+        let y;
+
+        if (this.#spriteNumber.GetY() == 1)
+            y = 0;
+        else
+            y = Math.floor(this.#frame / this.#spriteNumber.GetY());
 
         let spriteStartX = spriteSize.GetX() * x;
         let spriteStartY = spriteSize.GetY() * y;

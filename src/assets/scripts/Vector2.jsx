@@ -110,8 +110,20 @@ class Vector2 {
         return new Vector2(this.#x, this.#y)
     }
 
-    static Zero() {
+    static ZERO() {
         return new Vector2(0, 0);
+    }
+    static LEFT() {
+        return new Vector2(-1, 0);
+    }
+    static RIGHT() {
+        return new Vector2(1, 0);
+    }
+    static TOP() {
+        return new Vector2(0, -1);
+    }
+    static DOWN() {
+        return new Vector2(0, 1);
     }
 }
 
