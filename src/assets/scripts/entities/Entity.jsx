@@ -5,7 +5,7 @@ import GameSprite from "../GameSprite";
 
 class Entity extends GameObject {
 
-    static GravityVector = new Vector2(0, 650);
+    static GravityVector = new Vector2(0, 675);
 
     #velocity;
     #size;
@@ -21,7 +21,7 @@ class Entity extends GameObject {
         this.#velocity = Vector2.Zero();
 
         
-        this.#sprite = new GameSprite(this, "/mario.png", new Vector2(11, 17));
+        this.#sprite = new GameSprite(this);
     }
 
     Update(deltaTime) {
@@ -60,6 +60,8 @@ class Entity extends GameObject {
         this.#sprite.Draw(ctx);
     }
 
+    GetVelocity() { return this.#velocity.Clone(); }
+
     AddVelocity(vector) {
         this.#velocity.Add(vector);
     }
@@ -68,6 +70,7 @@ class Entity extends GameObject {
     SetSpeed(number) { this.#speed = number; }
 
     GetSize() { return this.#size.Clone(); }
+    GetSprite() { return this.#sprite; }
 
     IsOnFloar() { return this.#isOnFloar; }
 }
