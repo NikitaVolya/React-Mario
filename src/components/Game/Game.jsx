@@ -12,7 +12,7 @@ class Game extends React.Component {
 
     static #BlockSize = 100;
     static GetBlockSize() { return this.#BlockSize; }
-    static #DrawScale = 0.45;
+    static #DrawScale = 0.25;
     static GetDrawScale() { return this.#DrawScale; }
 
 

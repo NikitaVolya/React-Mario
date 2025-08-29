@@ -13,7 +13,7 @@ class Entity extends GameObject {
 
     #velocity;
     #size;
-    #speed = 40; 
+    #speed = 10; 
 
     #sprite;
     #animationStateMachine;
@@ -24,7 +24,7 @@ class Entity extends GameObject {
 
     constructor(game, position, size) {
 
-        Entity.GravityVector = new Vector2(0, Game.GetBlockSize() * 10)
+        Entity.GravityVector = new Vector2(0, Game.GetBlockSize() * 15)
 
         super(game, position);
 
@@ -41,37 +41,93 @@ class Entity extends GameObject {
         this.#coliderBox = new ColiderBox(this);
     }
 
-    Update(deltaTime) {
-        super.Update(deltaTime);
+    #VerticalMove(deltaTime) {
+        let vY = this.GetVelocity().GetY();
 
-        let position = this.GetPosition();
+        let nextPos = this.GetPosition()
+            .Add(Vector2.DOWN().Mult(vY * deltaTime));
+        let size = this.GetSize();
 
-        position.Add(Vector2.Mult(this.#velocity, deltaTime));
-
-        this.#velocity.Add(Vector2.Mult(Entity.GravityVector, deltaTime));
-        this.#velocity.SetX(this.#velocity.GetX() * 0.95 );
-
-        const size = this.GetSize();
-        let left_point = this.GetPosition()
-            .Add(new Vector2(size.GetX() * 0.1, size.GetY()));
-        let right_point = this.GetPosition()
-            .Add(new Vector2(size.GetX() * 0.9, size.GetY()));
+        let left_top_point = Vector2.Add(nextPos,       new Vector2(size.GetX() * 0.1, 0));
+        let left_bottom_point = Vector2.Add(nextPos,    new Vector2(size.GetX() * 0.1, size.GetY()));
+        let rigth_top_point = Vector2.Add(nextPos,      new Vector2(size.GetX() * 0.9, 0));
+        let right_bottom_point = Vector2.Add(nextPos,   new Vector2(size.GetX() * 0.9, size.GetY()));
 
         const mapManager = this.GetGame().GetMapManger();
 
-        if (mapManager.CheckColision(left_point) || mapManager.CheckColision(right_point))
-        {
-            this.#velocity.SetY(0);
+        if ((mapManager.CheckColision(rigth_top_point) || mapManager.CheckColision(left_top_point) && vY <= 0))
+        {   
+            this.SetVelocity(this.GetVelocity().SetY(vY * -0.1));
+            if (vY < 0) {
+                this.SetPosition(
+                    new Vector2(
+                        this.GetPosition().GetX(), 
+                        Math.floor(nextPos.GetY() / size.GetY() + 1) * size.GetY()
+                    )
+                );
+            }
+            return;
+        }
+
+        if ( mapManager.CheckColision(left_bottom_point) || mapManager.CheckColision(right_bottom_point))
+        {   
+            this.SetVelocity(this.GetVelocity().SetY(0));
+            if (vY > 0) {
+                this.SetPosition(
+                    new Vector2(
+                        this.GetPosition().GetX(), 
+                        Math.floor(nextPos.GetY() / size.GetY()) * size.GetY()
+                    )
+                );
+            }
             this.#isOnFloar = true;
+            return;
         }
         else {
             this.#isOnFloar = false;
         }
+        
+        this.SetPosition(
+            this.GetPosition().Add(new Vector2(0, vY * deltaTime))
+        );
+    }
 
-        this.SetPosition(position);
+    #HorizontalMove(deltaTime) {
+        let vX = this.GetVelocity().GetX()
+
+        let nextPos = this.GetPosition()
+            .Add(Vector2.RIGHT().Mult(vX * deltaTime));
+        let size = this.GetSize();
+
+        let left_top_point = Vector2.Add(nextPos,       new Vector2(size.GetX() * 0.1, size.GetY() * 0.1 ));
+        let left_bottom_point = Vector2.Add(nextPos,    new Vector2(size.GetX() * 0.1, size.GetY() * 0.9 ));
+        let rigth_top_point = Vector2.Add(nextPos,      new Vector2(size.GetX() * 0.9, size.GetY() * 0.1 ));
+        let right_bottom_point = Vector2.Add(nextPos,   new Vector2(size.GetX() * 0.9, size.GetY() * 0.9 ));
+
+        const mapManager = this.GetGame().GetMapManger();
+
+        if (mapManager.CheckColision(left_top_point) || mapManager.CheckColision(left_bottom_point) ||
+            mapManager.CheckColision(rigth_top_point) || mapManager.CheckColision(right_bottom_point))
+        {   
+            this.SetVelocity(this.GetVelocity().SetX(0));
+            return;
+        }
+        
+        this.SetPosition(
+            this.GetPosition().Add(new Vector2(vX * deltaTime, 0))
+        );
+    }
+
+    Update(deltaTime) {
+        super.Update(deltaTime);
+
+        this.#velocity.Add(Vector2.Mult(Entity.GravityVector, deltaTime));
+        this.#velocity.SetX(this.#velocity.GetX() * 0.95 );
+
+        this.#VerticalMove(deltaTime);
+        this.#HorizontalMove(deltaTime);
 
         this.#animationStateMachine.Update();
-
         this.#coliderBox.Update();
     }
 
@@ -96,6 +152,12 @@ class Entity extends GameObject {
         this.#sprite.Draw(ctx, this.GetPosition(), this.GetSize());
     }
 
+    SetVelocity(vector) {
+        if (!vector || !(vector instanceof  Vector2)) {
+            throw new TypeError(`Entity.SetVelocity : vector must be a valid Vector2`);
+        }
+        this.#velocity = vector;
+    }
     GetVelocity() { return this.#velocity.Clone(); }
 
     AddVelocity(vector) { 

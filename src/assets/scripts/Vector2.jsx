@@ -17,12 +17,14 @@ class Vector2 {
             throw new TypeError("Vector2.SetX : number must be a valid number");
         }
         this.#x = number; 
+        return this;
     }
     SetY(number) { 
         if (typeof number !== "number" || Number.isNaN(number)) {
             throw new TypeError("Vector2.SetY : number must be a valid number");
         }
         this.#y = number; 
+        return this;
     }
 
     VectorTo(other) {

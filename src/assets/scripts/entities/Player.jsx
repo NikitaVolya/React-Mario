@@ -16,13 +16,13 @@ class Player extends Entity {
         super(game, 
             position, 
             new Vector2(
-                Game.GetBlockSize() * 0.8, 
-                Game.GetBlockSize() * 0.8
+                Game.GetBlockSize(), 
+                Game.GetBlockSize()
             )
         );
 
         this.SetSpeed(20);
-        this.#jumpForce = 6 * Game.GetBlockSize();
+        this.#jumpForce = 7 * Game.GetBlockSize();
 
 
         this.GetSprite()
@@ -41,13 +41,13 @@ class Player extends Entity {
         this.GetColiderBox().OnColide = (entity) => {
             if (entity instanceof Enemy)
             {
-                if (this.GetVelocity().GetY() > 0)
+                if (this.GetPosition().GetY() < entity.GetPosition().GetY() - entity.GetSize().GetY() / 2)
                 {
                     entity.GetColiderBox().SetCanColide(false);
                     entity.GetAnimationStateMachine().SelectState("die");
                     entity.Stop();
 
-                    this.AddVelocity(Vector2.TOP().Mult(this.#jumpForce * 2));
+                    this.SetVelocity(Vector2.TOP().Mult(this.#jumpForce))
                 }
                 else
                     this.GetGame().StopGame();
@@ -63,7 +63,7 @@ class Player extends Entity {
         if (game.GetKey(87) && this.IsOnFloar())  
             this.AddVelocity(new Vector2(0, -this.#jumpForce));
         if (game.GetKey(87) && this.GetVelocity().GetY() < 0)
-            this.AddVelocity(new Vector2(0, -this.#jumpForce * 0.01));
+            this.AddVelocity(new Vector2(0, -this.#jumpForce * 0.0135));
         
         const speed = this.GetSpeed();
         
