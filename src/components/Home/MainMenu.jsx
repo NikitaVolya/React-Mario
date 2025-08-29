@@ -2,20 +2,34 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
+import '../../assets/styles/MainMenu.css';
+
 
 export default class MainMenu extends React.Component {
 
     render() {
 
         return <>
-            <h1>Super Mario Bros WEB!!!</h1>
-            
-            <Link to="/game">
-                <button>Play</button>
-            </Link>
-            <Link to="/setting">
-                <button>Setting</button>
-            </Link>
+            <div className="menu-container">
+                <div className="menu-content">
+                    <img
+                        src={process.env.PUBLIC_URL + "/Super_Mario_Bros_Logo.svg"}
+                        alt="Super Mario Bros"
+                        className="menu-logo"
+                    />
+
+                    <h1 className="menu-title">Super Mario Bros WEB!!!</h1>
+
+                    <div className="menu-buttons">
+                        <Link to="/game" className="menu-btn">
+                            Play
+                        </Link>
+                        <Link to="/setting" className="menu-btn">
+                            Settings
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </>
     }
 }

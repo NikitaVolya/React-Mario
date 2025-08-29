@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.menu-container {
+    background: url("/public/SuperMarioBackground.png") no-repeat center center;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-content {
+    text-align: center;
+    background: rgba(20, 40, 80, 0.7); /* м’який темно-синій */
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+.menu-logo {
+    width: 400px;
+    margin-bottom: 20px;
+    image-rendering: pixelated;
+}
+
+.menu-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 24px;
+    color: #fff;
+    text-shadow: 3px 3px #000;
+    margin-bottom: 40px;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.menu-btn {
+    font-family: 'Press Start 2P', cursive;
+    background: #3498db; /* приємний синій */
+    border: 4px solid #1c3a5d; /* темно-синя рамка */
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 24px;
+    font-size: 16px;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 4px 4px #1c3a5d;
+    display: inline-block;
+    border-radius: 8px;
+}
+
+.menu-btn:hover {
+    background: #5dade2; /* світліший небесний */
+    transform: translateY(-4px);
+    box-shadow: 6px 6px #1c3a5d;
+}
