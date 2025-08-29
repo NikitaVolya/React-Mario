@@ -21,7 +21,7 @@ class Player extends Entity {
             .Load("/mario.png")
             .SetSpriteNumber(new Vector2(8, 6))
             .SetScale(2.5)
-            .SetSlice(new Vector2(this.GetSize().getX() * 0.025, this.GetSize().getY() * -0.75))
+            .SetSlice(new Vector2(this.GetSize().GetX() * 0.025, this.GetSize().GetY() * -0.75))
             .SetFrame(0);
     }
 
@@ -30,7 +30,7 @@ class Player extends Entity {
 
         if (this.#game.GetKey(87) && this.IsOnFloar())  
             this.AddVelocity(new Vector2(0, -10 * this.#jumpForce));
-        if (this.#game.GetKey(87) && this.GetVelocity().getY() < 0)
+        if (this.#game.GetKey(87) && this.GetVelocity().GetY() < 0)
             this.AddVelocity(new Vector2(0, -this.#jumpForce / 5));
         
         const speed = this.GetSpeed();
@@ -41,9 +41,9 @@ class Player extends Entity {
             this.AddVelocity(new Vector2(speed, 0));
 
         const velocity = this.GetVelocity();
-        if (velocity.getX() > 0)
+        if (velocity.GetX() > 0)
             this.GetSprite().SetFlip(false);
-        else if (velocity.getX() < 0)
+        else if (velocity.GetX() < 0)
             this.GetSprite().SetFlip(true);
     }
 
