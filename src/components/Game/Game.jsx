@@ -9,6 +9,10 @@ import Entity from "../../assets/scripts/entities/Entity";
 
 class Game extends React.Component {
 
+    static #DrawScale = 0.5;
+    static GetDrawScale() { return this.#DrawScale; }
+
+
     #player = new Player(
         this,
         new Vector2(100, 100)
@@ -62,6 +66,9 @@ class Game extends React.Component {
         }
 
         const Update = (deltaTime) => {
+            if (!this.#gameCicle)
+                return;
+
             this.#player.Update(deltaTime);
 
             this.#entities = this.#entities.filter(

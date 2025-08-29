@@ -1,5 +1,8 @@
 import Entity from "./entities/Entity";
 import Vector2 from "./Vector2";
+import Game from "../../components/Game/Game";
+
+
 
 function drawSprite(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh, flipX = false) {
     ctx.save();
@@ -129,12 +132,13 @@ class GameSprite {
         let spriteEndY = spriteSize.GetY();
         
         let drawEntitySize = Vector2.Mult(entitySize, this.#scale);
+        drawEntitySize.Mult(Game.GetDrawScale());
+
         let scaleSlice = Vector2.Mult(entitySize, (1 - this.#scale) / 2);
 
         let drawPosition = Vector2.Add(position, scaleSlice);
         drawPosition.Add(this.#slice);
-        let drawSizeX = drawEntitySize.GetX();
-        let drawSizeY = drawEntitySize.GetY();
+        drawPosition.Mult(Game.GetDrawScale());
 
         
         ctx.imageSmoothingEnabled = false;
@@ -145,7 +149,7 @@ class GameSprite {
             spriteEndX, spriteEndY,
 
             drawPosition.GetX(), drawPosition.GetY(), 
-            drawSizeX, drawSizeY,
+            drawEntitySize.GetX(), drawEntitySize.GetY(),
             this.#flip
         );
     }

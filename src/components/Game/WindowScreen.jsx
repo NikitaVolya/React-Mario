@@ -1,6 +1,12 @@
 import { useEffect, useRef } from "react";
 
-export default function WindowScreen({ OnDraw, OnUpdate, OnKeyUp, OnKeyDown, BackgroundColor, gameCycle = true }) {
+export default function WindowScreen({ 
+    OnDraw, 
+    OnUpdate, 
+    OnKeyUp, 
+    OnKeyDown, 
+    BackgroundColor
+}) {
 
     const canvasRef = useRef(null);
     const backgroundColor = BackgroundColor ?? "white";
@@ -32,8 +38,7 @@ export default function WindowScreen({ OnDraw, OnUpdate, OnKeyUp, OnKeyDown, Bac
             // DRAW STATE
             OnDraw(ctx);
 
-            if (gameCycle)
-                requestAnimationFrame(gameLoop);
+            requestAnimationFrame(gameLoop);
         }
 
         gameLoop(); 

@@ -1,6 +1,7 @@
 import GameObject from "../GameObject";
 import Vector2 from "../Vector2";
 
+import Game from "../../../components/Game/Game";
 import GameSprite from "../GameSprite";
 import AnimationStateMachine from "./elements/AnimationStateMachine";
 import ColiderBox from "./ColiderBox";
@@ -68,14 +69,14 @@ class Entity extends GameObject {
 
         let position = this.GetPosition();
 
-        // ctx.beginPath();
-        // ctx.rect(
-        //     position.GetX(),
-        //     position.GetY(), 
-        //     this.#size.GetX(), 
-        //     this.#size.GetY()
-        // );
-        // ctx.stroke();
+        ctx.beginPath();
+        ctx.rect(
+            position.GetX() * Game.GetDrawScale(),
+            position.GetY() * Game.GetDrawScale(), 
+            this.#size.GetX() * Game.GetDrawScale(), 
+            this.#size.GetY() * Game.GetDrawScale()
+        );
+        ctx.stroke();
 
         this.#sprite.Draw(ctx);
     }

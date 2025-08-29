@@ -12,7 +12,7 @@ class Player extends Entity {
 
     constructor(game, position)
     {
-        super(game, position, new Vector2(100, 100));
+        super(game, position, new Vector2(80, 80));
 
         this.SetSpeed(20);
         this.#jumpForce = 40;
@@ -21,10 +21,9 @@ class Player extends Entity {
         this.GetSprite()
             .Load("/mario.png")
             .SetSpriteNumber(new Vector2(8, 6))
-            .SetScale(2.5)
-            .SetSlice(new Vector2(this.GetSize().GetX() * 0.025, this.GetSize().GetY() * -0.75))
+            .SetScale(3)
+            .SetSlice(new Vector2(this.GetSize().GetX() * 0.025, this.GetSize().GetY() * -0.95))
             .SetFrame(0);
-
         
         this.GetAnimationStateMachine().AddState(new AnimationState("walk", [0, 1, 2, 3], 0.25));
         this.GetAnimationStateMachine().AddState(new AnimationState("idle", [0], 10));
