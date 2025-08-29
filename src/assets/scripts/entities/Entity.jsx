@@ -3,6 +3,7 @@ import Vector2 from "../Vector2";
 
 import GameSprite from "../GameSprite";
 import AnimationStateMachine from "./elements/AnimationStateMachine";
+import ColiderBox from "./ColiderBox";
 
 
 class Entity extends GameObject {
@@ -15,6 +16,8 @@ class Entity extends GameObject {
 
     #sprite;
     #animationStateMachine;
+
+    #coliderBox;
 
     #isOnFloar = false;
 
@@ -30,6 +33,8 @@ class Entity extends GameObject {
 
         this.#sprite = new GameSprite(this);
         this.#animationStateMachine = new AnimationStateMachine(this);
+
+        this.#coliderBox = new ColiderBox(this);
     }
 
     Update(deltaTime) {
@@ -54,6 +59,8 @@ class Entity extends GameObject {
         this.SetPosition(position);
 
         this.#animationStateMachine.Update();
+
+        this.#coliderBox.Update();
     }
 
     Draw(ctx) {
@@ -61,14 +68,14 @@ class Entity extends GameObject {
 
         let position = this.GetPosition();
 
-        ctx.beginPath();
-        ctx.rect(
-            position.GetX(),
-            position.GetY(), 
-            this.#size.GetX(), 
-            this.#size.GetY()
-        );
-        ctx.stroke();
+        // ctx.beginPath();
+        // ctx.rect(
+        //     position.GetX(),
+        //     position.GetY(), 
+        //     this.#size.GetX(), 
+        //     this.#size.GetY()
+        // );
+        // ctx.stroke();
 
         this.#sprite.Draw(ctx);
     }
@@ -91,8 +98,11 @@ class Entity extends GameObject {
     }
 
     GetSize() { return this.#size.Clone(); }
+
     GetSprite() { return this.#sprite; }
     GetAnimationStateMachine() { return this.#animationStateMachine; }
+
+    GetColiderBox() { return this.#coliderBox; }
 
     IsOnFloar() { return this.#isOnFloar; }
 }

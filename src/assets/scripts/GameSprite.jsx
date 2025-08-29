@@ -32,7 +32,7 @@ class GameSprite {
 
     constructor(owner) {
         if (!owner || !(owner instanceof Entity)) {
-            throw new TypeError(`Owner [${this.#owner.GetId()}}] | GameSprite.Constructor : owner must be a valid Entity`);
+            throw new TypeError(`GameSprite.Constructor : owner must be a valid Entity`);
         }
         this.#owner = owner;
 

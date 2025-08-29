@@ -18,10 +18,13 @@ class Game extends React.Component {
     #keys = {};
     #frame;
 
+    #gameCicle;
+
     constructor(props) {
         super(props);
 
         this.#frame = 0;
+        this.#gameCicle = true;
     }
 
     KillEntity(entity) {
@@ -39,15 +42,23 @@ class Game extends React.Component {
         return this.#keys[key];
     }
 
+    ForEachEntity(func) {
+        this.#entities.forEach(entity => func(entity));
+    }
+
+    StopGame() {
+        this.#gameCicle = false;
+    }
+
     render() {
         const Draw = (ctx) => {
-            this.#player.Draw(ctx);
-
             this.#entities.every(
                 entity => {
                     entity.Draw(ctx);
                 }
             )
+
+            this.#player.Draw(ctx);
         }
 
         const Update = (deltaTime) => {
@@ -81,6 +92,7 @@ class Game extends React.Component {
                 OnUpdate={Update}
                 OnKeyUp={OnKeyUp}
                 OnKeyDown={OnKeyDown}
+                gameCycle={this.#gameCicle}
             />
         </>
     }

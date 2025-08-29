@@ -1,4 +1,5 @@
 import Vector2 from "../Vector2";
+import Enemy from "./Enemy";
 import Entity from "./Entity";
 
 import AnimationState from "./elements/AnimationState";
@@ -29,8 +30,23 @@ class Player extends Entity {
         this.GetAnimationStateMachine().AddState(new AnimationState("idle", [0], 10));
         this.GetAnimationStateMachine().AddState(new AnimationState("jump", [5], 10));
 
-
         this.GetAnimationStateMachine().SelectState("walk");
+
+        this.GetColiderBox().OnColide = (entity) => {
+            if (entity instanceof Enemy)
+            {
+                if (this.GetVelocity().GetY() > 0)
+                {
+                    entity.GetColiderBox().SetCanColide(false);
+                    entity.GetAnimationStateMachine().SelectState("die");
+                    entity.Stop();
+
+                    this.AddVelocity(Vector2.TOP().Mult(this.#jumpForce * 20));
+                }
+                else
+                    this.GetGame().StopGame();
+            }
+        }
     }
 
     Update(deltaTime) {

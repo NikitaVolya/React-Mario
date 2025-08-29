@@ -18,7 +18,7 @@ class Gumba extends Enemy {
             .SetSpriteNumber(new Vector2(4, 1))
             .SetFrame(1);
 
-        const dieState = new AnimationState("die", [0, 3, 3, 3], 0.5);
+        const dieState = new AnimationState("die", [0, 3, 3, 3], 0.2);
         dieState.OnAnimationEnd = () => {
             this.GetGame().KillEntity(this);
         }
@@ -29,6 +29,10 @@ class Gumba extends Enemy {
         this.GetAnimationStateMachine().SelectState("walk");
 
         this.#moveVector = Vector2.LEFT().Mult(this.GetSpeed());
+    }
+
+    Stop() {
+        this.#moveVector = Vector2.ZERO();
     }
 
     Update(deltaTime) {
