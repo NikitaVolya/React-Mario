@@ -121,13 +121,7 @@ class GameSprite {
 
         
         let x = this.#frame % this.#spriteNumber.GetX();
-
-        let y;
-
-        if (this.#spriteNumber.GetY() == 1)
-            y = 0;
-        else
-            y = Math.floor(this.#frame / this.#spriteNumber.GetY());
+        let y = Math.floor(this.#frame / this.#spriteNumber.GetX());
 
         let spriteStartX = spriteSize.GetX() * x;
         let spriteStartY = spriteSize.GetY() * y;

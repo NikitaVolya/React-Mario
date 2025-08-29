@@ -1,10 +1,10 @@
-import Entity from "./Entity";
 
 import Vector2 from "../Vector2";
 import AnimationState from "./elements/AnimationState";
+import Enemy from "./Enemy";
 
 
-class Gumba extends Entity {
+class Gumba extends Enemy {
 
     #moveVector
 
@@ -17,8 +17,15 @@ class Gumba extends Entity {
             .Load("/gumba.png")
             .SetSpriteNumber(new Vector2(4, 1))
             .SetFrame(1);
+
+        const dieState = new AnimationState("die", [0, 3, 3, 3], 0.5);
+        dieState.OnAnimationEnd = () => {
+            this.GetGame().KillEntity(this);
+        }
         
         this.GetAnimationStateMachine().AddState(new AnimationState("walk", [1, 2], 1));
+        this.GetAnimationStateMachine().AddState(dieState);
+
         this.GetAnimationStateMachine().SelectState("walk");
 
         this.#moveVector = Vector2.LEFT().Mult(this.GetSpeed());

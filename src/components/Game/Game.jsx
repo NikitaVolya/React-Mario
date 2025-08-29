@@ -4,6 +4,7 @@ import WindowScreen from "./WindowScreen";
 import Vector2 from "../../assets/scripts/Vector2";
 import Player from "../../assets/scripts/entities/Player";
 import Gumba from "../../assets/scripts/entities/Gumba";
+import Entity from "../../assets/scripts/entities/Entity";
 
 
 class Game extends React.Component {
@@ -12,7 +13,8 @@ class Game extends React.Component {
         this,
         new Vector2(100, 100)
     );
-    #entites = [new Gumba(this, new Vector2(800, 100))];
+    #entities = [new Gumba(this, new Vector2(800, 100))];
+    #entitiesToKill = [];
     #keys = {};
     #frame;
 
@@ -20,6 +22,13 @@ class Game extends React.Component {
         super(props);
 
         this.#frame = 0;
+    }
+
+    KillEntity(entity) {
+        if (!entity || !(entity instanceof Entity)) {
+            throw new TypeError(`[${this.GetId()}] Game.KillEntity : entity must be a valid Entity`);
+        }
+        this.#entitiesToKill.push(entity.GetId());
     }
 
     GetFrame() {
@@ -34,7 +43,7 @@ class Game extends React.Component {
         const Draw = (ctx) => {
             this.#player.Draw(ctx);
 
-            this.#entites.every(
+            this.#entities.every(
                 entity => {
                     entity.Draw(ctx);
                 }
@@ -44,7 +53,12 @@ class Game extends React.Component {
         const Update = (deltaTime) => {
             this.#player.Update(deltaTime);
 
-            this.#entites.every(
+            this.#entities = this.#entities.filter(
+                entity => { return !this.#entitiesToKill.includes(entity.GetId()); }
+            )
+            this.#entitiesToKill = [];
+
+            this.#entities.every(
                 entity => {
                     entity.Update(deltaTime);
                 }
