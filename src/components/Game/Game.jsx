@@ -12,6 +12,17 @@ class Game extends React.Component {
         new Vector2(100, 100)
     );
     #keys = {};
+    #frame;
+
+    constructor(props) {
+        super(props);
+
+        this.#frame = 0;
+    }
+
+    GetFrame() {
+        return this.#frame;
+    }
 
     GetKey(key) {
         return this.#keys[key];
@@ -24,6 +35,8 @@ class Game extends React.Component {
 
         const Update = (deltaTime) => {
             this.#player.Update(deltaTime);
+
+            this.#frame++;
         };
 
         const OnKeyDown = (e) => {
