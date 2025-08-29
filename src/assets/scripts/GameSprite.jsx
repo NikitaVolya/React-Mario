@@ -17,10 +17,9 @@ function drawSprite(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh, flipX = false) {
   ctx.restore();
 }
 
+const imageCache = {};
 
 class GameSprite {
-
-    #owner;
 
     #image;
     #imageSize;
@@ -33,11 +32,7 @@ class GameSprite {
 
     #flip;
 
-    constructor(owner) {
-        if (!owner || !(owner instanceof Entity)) {
-            throw new TypeError(`GameSprite.Constructor : owner must be a valid Entity`);
-        }
-        this.#owner = owner;
+    constructor() {
 
         this.#image = null;
         this.#imageSize = null;
@@ -51,18 +46,27 @@ class GameSprite {
     }
 
     Load(image_path) {
-        this.#image = new Image();
-        this.#image.src = process.env.PUBLIC_URL + "/sprites" + image_path;
+        const fullPath = process.env.PUBLIC_URL + "/sprites" + image_path;
 
-        this.#image.onload = (e) => {
-            this.#imageSize = new Vector2(this.#image.width, this.#image.height);
+        if (imageCache[fullPath]) {
+            this.#image = imageCache[fullPath].img;
+            this.#imageSize = imageCache[fullPath].size;
+        } else {
+            this.#image = new Image();
+            this.#image.src = fullPath;
+            this.#image.onload = () => {
+                const size = new Vector2(this.#image.width, this.#image.height);
+                imageCache[fullPath] = { img: this.#image, size };
+                this.#imageSize = size;
+            }
         }
+
         return this;
     }
 
     SetSpriteNumber(size) {
         if (!size || !(size instanceof  Vector2)) {
-            throw new TypeError(`Owner [${this.#owner.GetId()}}] | GameSprite.SetSpriteNumber : size must be a valid Vector2`);
+            throw new TypeError(`GameSprite.SetSpriteNumber : size must be a valid Vector2`);
         }
         this.#spriteNumber = size;
         return this;
@@ -70,7 +74,7 @@ class GameSprite {
     
     SetScale(number) { 
         if (typeof number !== "number" || Number.isNaN(number)) {
-            throw new TypeError(`Owner [${this.#owner.GetId()}}] | GameSprite.SetScale : number must be a valid number`);
+            throw new TypeError(`GameSprite.SetScale : number must be a valid number`);
         }
         this.#scale = number; 
         return this; 
@@ -78,7 +82,7 @@ class GameSprite {
 
     SetSlice(vector) {
         if (!vector || !(vector instanceof  Vector2)) {
-            throw new TypeError(`Owner [${this.#owner.GetId()}}] | GameSprite.SetSlice : vector must be a valid Vector2`);
+            throw new TypeError(`GameSprite.SetSlice : vector must be a valid Vector2`);
         }
         this.#slice = vector;
         return this;
@@ -86,7 +90,7 @@ class GameSprite {
 
     SetFrame(number) {
         if (typeof number !== "number" || Number.isNaN(number)) {
-            throw new TypeError(`Owner [${this.#owner.GetId()}}] | GameSprite.SetFrame : number must be a valid number`);
+            throw new TypeError(`GameSprite.SetFrame : number must be a valid number`);
         }
 
         if (number < 0)
@@ -101,14 +105,14 @@ class GameSprite {
 
     SetFlip(value) {
         if (typeof value !== "boolean" || Number.isNaN(value)) {
-            throw new TypeError(`Owner [${this.#owner.GetId()}}] | GameSprite.SetFlip : value must be a valid boolean`);
+            throw new TypeError(`Owner [GameSprite.SetFlip : value must be a valid boolean`);
         }
         this.#flip = value;
     }
 
-    Draw(ctx) {
+    Draw(ctx, position, size) {
         if (ctx && !(ctx instanceof CanvasRenderingContext2D)) {
-            throw new TypeError(`Owner [${this.#owner.GetId()}}] | GameSprite.SetFlip : Invalid canvas context`);
+            throw new TypeError(`GameSprite.SetFlip : Invalid canvas context`);
         }
 
         if (this.#image == null || this.#spriteNumber == null || this.#imageSize == null)
@@ -118,9 +122,6 @@ class GameSprite {
             this.#imageSize.GetX() / this.#spriteNumber.GetX(),
             this.#imageSize.GetY() / this.#spriteNumber.GetY(),
         );
-        
-        let position = this.#owner.GetPosition();
-        let entitySize = this.#owner.GetSize();
 
         
         let x = this.#frame % this.#spriteNumber.GetX();
@@ -131,10 +132,10 @@ class GameSprite {
         let spriteEndX = spriteSize.GetX();
         let spriteEndY = spriteSize.GetY();
         
-        let drawEntitySize = Vector2.Mult(entitySize, this.#scale);
+        let drawEntitySize = Vector2.Mult(size, this.#scale);
         drawEntitySize.Mult(Game.GetDrawScale());
 
-        let scaleSlice = Vector2.Mult(entitySize, (1 - this.#scale) / 2);
+        let scaleSlice = Vector2.Mult(size, (1 - this.#scale) / 2);
 
         let drawPosition = Vector2.Add(position, scaleSlice);
         drawPosition.Add(this.#slice);

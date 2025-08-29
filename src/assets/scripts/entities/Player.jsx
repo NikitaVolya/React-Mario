@@ -1,3 +1,4 @@
+import Game from "../../../components/Game/Game";
 import Vector2 from "../Vector2";
 import Enemy from "./Enemy";
 import Entity from "./Entity";
@@ -12,17 +13,23 @@ class Player extends Entity {
 
     constructor(game, position)
     {
-        super(game, position, new Vector2(80, 80));
+        super(game, 
+            position, 
+            new Vector2(
+                Game.GetBlockSize() * 0.8, 
+                Game.GetBlockSize() * 0.8
+            )
+        );
 
         this.SetSpeed(20);
-        this.#jumpForce = 40;
+        this.#jumpForce = 6 * Game.GetBlockSize();
 
 
         this.GetSprite()
             .Load("/mario.png")
             .SetSpriteNumber(new Vector2(8, 6))
             .SetScale(3)
-            .SetSlice(new Vector2(this.GetSize().GetX() * 0.025, this.GetSize().GetY() * -0.95))
+            .SetSlice(new Vector2(this.GetSize().GetX() * 0.025, this.GetSize().GetY() * -1))
             .SetFrame(0);
         
         this.GetAnimationStateMachine().AddState(new AnimationState("walk", [0, 1, 2, 3], 0.25));
@@ -40,7 +47,7 @@ class Player extends Entity {
                     entity.GetAnimationStateMachine().SelectState("die");
                     entity.Stop();
 
-                    this.AddVelocity(Vector2.TOP().Mult(this.#jumpForce * 20));
+                    this.AddVelocity(Vector2.TOP().Mult(this.#jumpForce * 2));
                 }
                 else
                     this.GetGame().StopGame();
@@ -54,9 +61,9 @@ class Player extends Entity {
         const game = this.GetGame();
 
         if (game.GetKey(87) && this.IsOnFloar())  
-            this.AddVelocity(new Vector2(0, -10 * this.#jumpForce));
+            this.AddVelocity(new Vector2(0, -this.#jumpForce));
         if (game.GetKey(87) && this.GetVelocity().GetY() < 0)
-            this.AddVelocity(new Vector2(0, -this.#jumpForce / 8));
+            this.AddVelocity(new Vector2(0, -this.#jumpForce * 0.01));
         
         const speed = this.GetSpeed();
         

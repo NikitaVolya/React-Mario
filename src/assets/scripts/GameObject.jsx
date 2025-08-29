@@ -7,7 +7,7 @@ class GameObject {
     #position;
     #id;
 
-    static #globalId;
+    static #globalId = 0;
 
     constructor(game, position) {
 

@@ -5,11 +5,14 @@ import Vector2 from "../../assets/scripts/Vector2";
 import Player from "../../assets/scripts/entities/Player";
 import Gumba from "../../assets/scripts/entities/Gumba";
 import Entity from "../../assets/scripts/entities/Entity";
+import MapManager from "../../assets/scripts/MapManager";
 
 
 class Game extends React.Component {
 
-    static #DrawScale = 0.5;
+    static #BlockSize = 100;
+    static GetBlockSize() { return this.#BlockSize; }
+    static #DrawScale = 0.45;
     static GetDrawScale() { return this.#DrawScale; }
 
 
@@ -17,8 +20,14 @@ class Game extends React.Component {
         this,
         new Vector2(100, 100)
     );
-    #entities = [new Gumba(this, new Vector2(800, 100))];
+    #entities = [
+        new Gumba(this, new Vector2(800, 100)),
+        new Gumba(this, new Vector2(1000, 100)),
+    ];
     #entitiesToKill = [];
+
+    #mapManager;
+
     #keys = {};
     #frame;
 
@@ -29,6 +38,8 @@ class Game extends React.Component {
 
         this.#frame = 0;
         this.#gameCicle = true;
+
+        this.#mapManager = new MapManager(this);
     }
 
     KillEntity(entity) {
@@ -36,6 +47,10 @@ class Game extends React.Component {
             throw new TypeError(`[${this.GetId()}] Game.KillEntity : entity must be a valid Entity`);
         }
         this.#entitiesToKill.push(entity.GetId());
+    }
+
+    GetMapManger() {
+        return this.#mapManager;
     }
 
     GetFrame() {
@@ -56,7 +71,10 @@ class Game extends React.Component {
 
     render() {
         const Draw = (ctx) => {
-            this.#entities.every(
+
+            this.#mapManager.Draw(ctx);
+
+            this.#entities.forEach(
                 entity => {
                     entity.Draw(ctx);
                 }
@@ -75,8 +93,8 @@ class Game extends React.Component {
                 entity => { return !this.#entitiesToKill.includes(entity.GetId()); }
             )
             this.#entitiesToKill = [];
-
-            this.#entities.every(
+            
+            this.#entities.forEach(
                 entity => {
                     entity.Update(deltaTime);
                 }

@@ -9,7 +9,7 @@ import ColiderBox from "./ColiderBox";
 
 class Entity extends GameObject {
 
-    static GravityVector = new Vector2(0, 700);
+    static GravityVector;
 
     #velocity;
     #size;
@@ -23,6 +23,9 @@ class Entity extends GameObject {
     #isOnFloar = false;
 
     constructor(game, position, size) {
+
+        Entity.GravityVector = new Vector2(0, Game.GetBlockSize() * 10)
+
         super(game, position);
 
         if (!size || !(size instanceof  Vector2)) {
@@ -32,7 +35,7 @@ class Entity extends GameObject {
 
         this.#velocity = Vector2.ZERO();
 
-        this.#sprite = new GameSprite(this);
+        this.#sprite = new GameSprite();
         this.#animationStateMachine = new AnimationStateMachine(this);
 
         this.#coliderBox = new ColiderBox(this);
@@ -48,8 +51,16 @@ class Entity extends GameObject {
         this.#velocity.Add(Vector2.Mult(Entity.GravityVector, deltaTime));
         this.#velocity.SetX(this.#velocity.GetX() * 0.95 );
 
-        if (position.GetY() >= window.innerHeight - this.#size.GetY())
-        {    
+        const size = this.GetSize();
+        let left_point = this.GetPosition()
+            .Add(new Vector2(size.GetX() * 0.1, size.GetY()));
+        let right_point = this.GetPosition()
+            .Add(new Vector2(size.GetX() * 0.9, size.GetY()));
+
+        const mapManager = this.GetGame().GetMapManger();
+
+        if (mapManager.CheckColision(left_point) || mapManager.CheckColision(right_point))
+        {
             this.#velocity.SetY(0);
             this.#isOnFloar = true;
         }
@@ -67,18 +78,22 @@ class Entity extends GameObject {
     Draw(ctx) {
         super.Draw(ctx);
 
-        let position = this.GetPosition();
+        let drawPosition = this.GetPosition();
+        drawPosition.Mult(Game.GetDrawScale());
+
+        let drawSize = this.GetSize();
+        drawSize.Mult(Game.GetDrawScale());
 
         ctx.beginPath();
         ctx.rect(
-            position.GetX() * Game.GetDrawScale(),
-            position.GetY() * Game.GetDrawScale(), 
-            this.#size.GetX() * Game.GetDrawScale(), 
-            this.#size.GetY() * Game.GetDrawScale()
+            drawPosition.GetX(),
+            drawPosition.GetY(), 
+            drawSize.GetX(), 
+            drawSize.GetY()
         );
         ctx.stroke();
 
-        this.#sprite.Draw(ctx);
+        this.#sprite.Draw(ctx, this.GetPosition(), this.GetSize());
     }
 
     GetVelocity() { return this.#velocity.Clone(); }

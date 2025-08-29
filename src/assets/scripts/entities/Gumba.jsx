@@ -1,4 +1,5 @@
 
+import Game from "../../../components/Game/Game";
 import Vector2 from "../Vector2";
 import AnimationState from "./elements/AnimationState";
 import Enemy from "./Enemy";
@@ -9,7 +10,7 @@ class Gumba extends Enemy {
     #moveVector
 
     constructor(game, position) {
-        super(game, position, new Vector2(100, 100));
+        super(game, position, new Vector2(Game.GetBlockSize(), Game.GetBlockSize()));
 
         this.SetSpeed(2);
 

@@ -14,13 +14,13 @@ class Vector2 {
 
     SetX(number) { 
         if (typeof number !== "number" || Number.isNaN(number)) {
-            throw new TypeError("x must be a valid number");
+            throw new TypeError("Vector2.SetX : number must be a valid number");
         }
         this.#x = number; 
     }
     SetY(number) { 
         if (typeof number !== "number" || Number.isNaN(number)) {
-            throw new TypeError("y must be a valid number");
+            throw new TypeError("Vector2.SetY : number must be a valid number");
         }
         this.#y = number; 
     }
@@ -66,7 +66,7 @@ class Vector2 {
 
     Mult(number) {
         if (typeof number !== "number" || Number.isNaN(number)) {
-            throw new TypeError("y must be a valid number");
+            throw new TypeError("Vector.Mult : number must be a valid number");
         }
         this.#x = this.#x * number;
         this.#y = this.#y * number;
