@@ -36,9 +36,70 @@ body {
 }
 
 .setting-item input[type="range"] {
-    width: 60%;
-    cursor: pointer;
+    -webkit-appearance: none;
+    width: 200px;
+    height: 10px;
+    background: #444;
+    border-radius: 5px;
+    outline: none;
+    margin-top: 10px;
 }
+
+.setting-item input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #ffcc00;
+    border: 2px solid #333;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.setting-item input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #ffcc00;
+    border: 2px solid #333;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+
+setting-item label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 0.6rem;
+    user-select: none;
+}
+
+.setting-item input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    background: #222;
+    cursor: pointer;
+    position: relative;
+}
+
+.setting-item input[type="checkbox"]:checked {
+    background: #4caf50;
+    border-color: #fff;
+}
+
+.setting-item input[type="checkbox"]:checked::after {
+    content: "✔";
+    position: absolute;
+    top: -2px;
+    left: 2px;
+    font-size: 14px;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+}
+
 
 .back-button {
     margin-top: 40px;

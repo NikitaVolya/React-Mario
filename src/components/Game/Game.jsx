@@ -10,6 +10,7 @@ import MapManager from "../../assets/scripts/MapManager";
 import CoinBox from "../../assets/scripts/entities/items/RewardBox";
 
 import "../../assets/styles/Game.css";
+import GameCamera from "../../assets/scripts/GameCamera";
 
 
 class Game extends React.Component {
@@ -19,11 +20,15 @@ class Game extends React.Component {
     static #DrawScale = 1;
     static GetDrawScale() { return this.#DrawScale; }
 
+    static #DrawHitBoxes = true;
+    static GetDrawHitBoxes() { return this.#DrawHitBoxes; }
+
 
     #entities;
     #entitiesToKill;
 
     #mapManager;
+    #camera;
 
     #keys;
     #frame;
@@ -52,13 +57,17 @@ class Game extends React.Component {
         this.#entitiesToKill = [];
 
         this.#mapManager = new MapManager(this);
+        this.#camera = new GameCamera(this, new Vector2(Game.GetBlockSize(), 0));
 
         Game.#DrawScale = Number(localStorage.getItem("drawScale")) ?? 1;
+        Game.#DrawHitBoxes = localStorage.getItem("showHitboxes") === "true";
 
         this.state = {
             showGameOverScreen: false
         }
     }
+
+    GetPlayer() { return this.#entities[0]; }
 
     KillEntity(entity) {
         if (!entity || !(entity instanceof Entity)) {
@@ -69,6 +78,10 @@ class Game extends React.Component {
 
     GetMapManger() {
         return this.#mapManager;
+    }
+
+    GetCamera() {
+        return this.#camera
     }
 
     GetFrame() {
@@ -116,6 +129,8 @@ class Game extends React.Component {
                     entity.Update(deltaTime);
                 }
             )
+
+            this.#camera.Update(deltaTime);
 
             this.#frame++;
         };

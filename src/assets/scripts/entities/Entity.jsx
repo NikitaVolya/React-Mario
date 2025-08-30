@@ -143,23 +143,29 @@ class Entity extends GameObject {
 
     Draw(ctx) {
         super.Draw(ctx);
+        const cameraPosition = this.GetGame().GetCamera().GetPosition();
+        const drawHitboxes = Game.GetDrawHitBoxes();
 
-        let drawPosition = this.GetPosition();
-        drawPosition.Mult(Game.GetDrawScale());
+        if (drawHitboxes)
+        {
+            let drawPosition = this.GetPosition();
+            drawPosition.Sub(cameraPosition);
+            drawPosition.Mult(Game.GetDrawScale());
 
-        let drawSize = this.GetSize();
-        drawSize.Mult(Game.GetDrawScale());
+            let drawSize = this.GetSize();
+            drawSize.Mult(Game.GetDrawScale());
 
-        // ctx.beginPath();
-        // ctx.rect(
-        //     drawPosition.GetX(),
-        //     drawPosition.GetY(), 
-        //     drawSize.GetX(), 
-        //     drawSize.GetY()
-        // );
-        // ctx.stroke();
+            ctx.beginPath();
+            ctx.rect(
+                drawPosition.GetX(),
+                drawPosition.GetY(), 
+                drawSize.GetX(), 
+                drawSize.GetY()
+            );
+            ctx.stroke();
+        }
 
-        this.#sprite.Draw(ctx, this.GetPosition(), this.GetSize());
+        this.#sprite.Draw(ctx, this.GetPosition(), this.GetSize(), cameraPosition);
     }
 
     SetVelocity(vector) {

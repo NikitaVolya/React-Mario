@@ -112,7 +112,8 @@ class GameSprite {
         this.#flip = value;
     }
 
-    Draw(ctx, position, size) {
+    Draw(ctx, position, size, cameraPosition = new Vector2(0, 0)) {
+
         if (ctx && !(ctx instanceof CanvasRenderingContext2D)) {
             throw new TypeError(`GameSprite.SetFlip : Invalid canvas context`);
         }
@@ -141,6 +142,7 @@ class GameSprite {
 
         let drawPosition = Vector2.Add(position, scaleSlice);
         drawPosition.Add(this.#slice);
+        drawPosition.Sub(cameraPosition);
         drawPosition.Mult(Game.GetDrawScale());
 
         
