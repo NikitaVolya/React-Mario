@@ -6,6 +6,7 @@ import Player from "../../assets/scripts/entities/Player";
 import Gumba from "../../assets/scripts/entities/enemies/Gumba";
 import Entity from "../../assets/scripts/entities/Entity";
 import MapManager from "../../assets/scripts/MapManager";
+import CoinBox from "../../assets/scripts/entities/items/CoinBox";
 
 
 class Game extends React.Component {
@@ -16,13 +17,16 @@ class Game extends React.Component {
     static GetDrawScale() { return this.#DrawScale; }
 
 
-    #player = new Player(
-        this,
-        new Vector2(Game.GetBlockSize(), Game.GetBlockSize() * 10)
-    );
     #entities = [
+        new Player(this,
+            new Vector2(Game.GetBlockSize(), Game.GetBlockSize() * 10)
+        ),
         new Gumba(this, new Vector2(Game.GetBlockSize() * 15, Game.GetBlockSize() * 10)),
         new Gumba(this, new Vector2(Game.GetBlockSize() * 18, Game.GetBlockSize() * 10)),
+        new CoinBox(this, new Vector2(Game.GetBlockSize() * 21, Game.GetBlockSize() * 8)),
+        new CoinBox(this, new Vector2(Game.GetBlockSize() * 23, Game.GetBlockSize() * 8)),
+        new CoinBox(this, new Vector2(Game.GetBlockSize() * 16, Game.GetBlockSize() * 8)),
+        new CoinBox(this, new Vector2(Game.GetBlockSize() * 22, Game.GetBlockSize() * 3)),
     ];
     #entitiesToKill = [];
 
@@ -38,8 +42,6 @@ class Game extends React.Component {
 
         this.#frame = 0;
         this.#gameCicle = true;
-
-        this.#entities[1].SetIsMovable(false);
 
         this.#mapManager = new MapManager(this);
     }
@@ -81,15 +83,11 @@ class Game extends React.Component {
                     entity.Draw(ctx);
                 }
             )
-
-            this.#player.Draw(ctx);
         }
 
         const Update = (deltaTime) => {
             if (!this.#gameCicle)
                 return;
-
-            this.#player.Update(deltaTime);
 
             this.#entities = this.#entities.filter(
                 entity => { return !this.#entitiesToKill.includes(entity.GetId()); }

@@ -4,6 +4,7 @@ import Enemy from "./enemies/Enemy";
 import Entity from "./Entity";
 
 import AnimationState from "./elements/AnimationState";
+import Gumba from "./enemies/Gumba";
 
 
 
@@ -42,7 +43,7 @@ class Player extends Entity {
         this.GetAnimationStateMachine().SelectState("walk");
 
         this.GetColiderBox().OnColide = (entity) => {
-            if (entity instanceof Enemy)
+            if (entity instanceof Gumba)
             {
                 if (this.GetPosition().GetY() < entity.GetPosition().GetY() - entity.GetSize().GetY() / 2)
                 {

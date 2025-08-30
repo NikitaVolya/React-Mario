@@ -32,6 +32,7 @@ class AnimationStateMachine {
             throw new Error("AnimationStateMachine.SelectState : state not found");
         
         this.#currentState = this.#states[name];
+        return this;
     }
 
     AddState(state) {
@@ -41,6 +42,7 @@ class AnimationStateMachine {
             throw new Error("AnimationState.AddState : state with same name already existe");
 
         this.#states[state.GetName()] = state;
+        return this;
     }
 
     Update() {

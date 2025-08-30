@@ -34,6 +34,7 @@ class ColiderBox {
 
         this.#game.ForEachEntity(
             (entity) => {
+
                 if (entity.GetId() == this.#owner.GetId())
                     return;
                 if (!entity.GetColiderBox().CanColide())
@@ -49,8 +50,9 @@ class ColiderBox {
                         selfPosition.GetY() + selfSize.GetY() < otherPosition.GetY() ||
                         selfPosition.GetY() > otherPosition.GetY() + otherSize.GetY()
                     )
-                )
+                ) {
                     this.OnColide(entity);
+                }
             }
         )
     }

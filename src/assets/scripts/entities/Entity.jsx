@@ -157,7 +157,7 @@ class Entity extends GameObject {
         //     drawSize.GetX(), 
         //     drawSize.GetY()
         // );
-        ctx.stroke();
+        // ctx.stroke();
 
         this.#sprite.Draw(ctx, this.GetPosition(), this.GetSize());
     }
