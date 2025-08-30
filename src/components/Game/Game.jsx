@@ -11,6 +11,10 @@ import CoinBox from "../../assets/scripts/entities/items/RewardBox";
 
 import "../../assets/styles/Game.css";
 import GameCamera from "../../assets/scripts/GameCamera";
+import Clouds from "../../assets/scripts/entities/decorations/Clouds";
+import Castle from "../../assets/scripts/entities/decorations/Castle";
+import Flag from "../../assets/scripts/entities/items/Flag";
+import KillBox from "../../assets/scripts/entities/items/KillBox";
 
 
 class Game extends React.Component {
@@ -47,12 +51,31 @@ class Game extends React.Component {
             new Player(this,
                 new Vector2(Game.GetBlockSize(), Game.GetBlockSize() * 10)
             ),
-            new Gumba(this, new Vector2(Game.GetBlockSize() * 15, Game.GetBlockSize() * 10)),
-            new Gumba(this, new Vector2(Game.GetBlockSize() * 18, Game.GetBlockSize() * 10)),
-            new CoinBox(this, new Vector2(Game.GetBlockSize() * 21, Game.GetBlockSize() * 8)),
-            new CoinBox(this, new Vector2(Game.GetBlockSize() * 23, Game.GetBlockSize() * 8)),
-            new CoinBox(this, new Vector2(Game.GetBlockSize() * 16, Game.GetBlockSize() * 8)),
-            new CoinBox(this, new Vector2(Game.GetBlockSize() * 22, Game.GetBlockSize() * 3)),
+            new Gumba(this, new Vector2(Game.GetBlockSize() * 15, Game.GetBlockSize() * 13)),
+            new Gumba(this, new Vector2(Game.GetBlockSize() * 18, Game.GetBlockSize() * 13)),
+            new CoinBox(this, new Vector2(Game.GetBlockSize() * 21, Game.GetBlockSize() * 11)),
+            new CoinBox(this, new Vector2(Game.GetBlockSize() * 23, Game.GetBlockSize() * 11)),
+            new CoinBox(this, new Vector2(Game.GetBlockSize() * 16, Game.GetBlockSize() * 11)),
+            new CoinBox(this, new Vector2(Game.GetBlockSize() * 22, Game.GetBlockSize() * 6)),
+
+            new Clouds(this, new Vector2(Game.GetBlockSize(), Game.GetBlockSize() * -3)),
+            new Clouds(this, new Vector2(Game.GetBlockSize() * 60, Game.GetBlockSize() * -3)),
+            new Clouds(this, new Vector2(Game.GetBlockSize() * 120, Game.GetBlockSize() * -3)),
+            new Clouds(this, new Vector2(Game.GetBlockSize() * 180, Game.GetBlockSize() * -6)),
+
+            new Flag(this, new Vector2(Game.GetBlockSize() * 196, Game.GetBlockSize() * 5)),
+            new Castle(this,new Vector2(Game.GetBlockSize() * 205, Game.GetBlockSize() * 10)),
+
+            new KillBox(this, new Vector2(Game.GetBlockSize() * 71, Game.GetBlockSize() * 16)),
+            new KillBox(this, new Vector2(Game.GetBlockSize() * 72, Game.GetBlockSize() * 16)),
+
+            
+            new KillBox(this, new Vector2(Game.GetBlockSize() * 88, Game.GetBlockSize() * 16)),
+            new KillBox(this, new Vector2(Game.GetBlockSize() * 89, Game.GetBlockSize() * 16)),
+            new KillBox(this, new Vector2(Game.GetBlockSize() * 90, Game.GetBlockSize() * 16)),
+
+            new KillBox(this, new Vector2(Game.GetBlockSize() * 155, Game.GetBlockSize() * 16)),
+            new KillBox(this, new Vector2(Game.GetBlockSize() * 156, Game.GetBlockSize() * 16)),
         ];
         this.#entitiesToKill = [];
 
@@ -63,7 +86,8 @@ class Game extends React.Component {
         Game.#DrawHitBoxes = localStorage.getItem("showHitboxes") === "true";
 
         this.state = {
-            showGameOverScreen: false
+            showGameOverScreen: false,
+            showGameWinScreen: false
         }
     }
 
@@ -96,9 +120,18 @@ class Game extends React.Component {
         this.#entities.forEach(entity => func(entity));
     }
 
-    StopGame() {
+    ShowGameWin() {
         this.#gameCicle = false;
         this.setState({
+            ...this.state, 
+            showGameWinScreen: true
+        });
+    }
+
+    ShowGameOver() {
+        this.#gameCicle = false;
+        this.setState({
+            ...this.state, 
             showGameOverScreen: true
         })
     }
@@ -108,7 +141,16 @@ class Game extends React.Component {
 
             this.#mapManager.Draw(ctx);
 
-            this.#entities.forEach(
+            const entitiesDrawSortFunction = (a, b) => {
+                return a.GetSprite().GetDrawOrder() - b.GetSprite().GetDrawOrder();
+            };
+
+
+            let draw_queue = [...this.#entities];
+
+            draw_queue
+            .sort(entitiesDrawSortFunction)
+            .forEach(
                 entity => {
                     entity.Draw(ctx);
                 }
@@ -172,6 +214,27 @@ class Game extends React.Component {
                         </div>
                     </div>
                 </div>
+            }
+            {
+                this.state.showGameWinScreen &&
+                <div className="victory-overlay">
+                <div className="victory-content">
+                    <h1>YOU WIN! 🎉</h1>
+
+                    <div className="victory-buttons">
+                        <Link to="/">
+                            <button className="victory-btn">Return to Menu</button>
+                        </Link>
+
+                        <button
+                            className="victory-btn"
+                            onClick={() => window.location.reload()}
+                        >
+                            Play Again
+                        </button>
+                    </div>
+                </div>
+            </div>
             }
         </>
     }

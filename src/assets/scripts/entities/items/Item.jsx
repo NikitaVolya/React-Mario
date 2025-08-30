@@ -1,5 +1,6 @@
 import Entity from "../Entity";
-
+import Player from "../Player";
+import Game from "../../../../components/Game/Game";
 
 
 class Item extends Entity {
@@ -8,6 +9,13 @@ class Item extends Entity {
         super(game, position, size);
 
         this.SetIsMovable(false);
+
+        this.GetColiderBox()
+        .OnColide = entity => {
+            if (!(entity instanceof Player))
+                return;
+            this.Use();
+        }
     }
 
     Use() {

@@ -46,7 +46,7 @@ class Player extends Entity {
 
         const gameOverState = new AnimationState("gameOver", [6, 6], 1);
         gameOverState.OnAnimationEnd = () => {
-            this.GetGame().StopGame();
+            this.GetGame().ShowGameOver();
         };
 
         this.GetAnimationStateMachine().AddState(gameOverState)
@@ -66,16 +66,19 @@ class Player extends Entity {
                 }
                 else
                 {
-                    this.GetAnimationStateMachine()
-                    .SelectState("gameOver");
-                    this.GetAnimationStateMachine().SetBlockSwitch(true);
-                    
-                    this.SetVelocity(Vector2.TOP().Mult(this.#jumpForce * 2.5))
-                    this.GetColiderBox().SetCanColide(false);
-                    this.SetReadInput(false);
+                    this.Die()
                 }
             }
         }
+    }
+
+    Die() {
+        this.GetAnimationStateMachine().SelectState("gameOver")
+        this.GetAnimationStateMachine().SetBlockSwitch(true);
+        
+        this.SetVelocity(Vector2.TOP().Mult(this.#jumpForce * 2.5))
+        this.GetColiderBox().SetCanColide(false);
+        this.SetReadInput(false);
     }
 
     SetReadInput(value) {

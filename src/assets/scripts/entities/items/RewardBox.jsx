@@ -1,8 +1,6 @@
 import Game from "../../../../components/Game/Game";
 import Vector2 from "../../Vector2";
 import AnimationState from "../elements/AnimationState";
-import AnimationStateMachine from "../elements/AnimationStateMachine";
-import Player from "../Player";
 import Item from "./Item";
 
 
@@ -22,15 +20,15 @@ class CoinBox extends Item {
             .AddState(new AnimationState("idel", [16, 36], 2))
             .SelectState("idel");
 
-        this.GetColiderBox()
-        .OnColide = entity => {
-            if (!(entity instanceof Player))
-                return;
-            if (entity.GetPosition().GetY() > this.GetPosition().GetY() - this.GetSize().GetY() / 10 &&
-                entity.GetVelocity().GetY() < Game.GetBlockSize()) {
-                this.GetGame().KillEntity(this);
-                this.Use();
-            }
+        
+    }
+
+    Use() {
+        const player = this.GetGame().GetPlayer();
+
+        if (player.GetPosition().GetY() > this.GetPosition().GetY() - this.GetSize().GetY() / 10 &&
+                player.GetVelocity().GetY() < Game.GetBlockSize()) {
+            this.GetGame().KillEntity(this);
         }
     }
 

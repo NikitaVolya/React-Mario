@@ -30,6 +30,8 @@ class GameSprite {
     #slice;
     #frame;
 
+    #drawOrder;
+
     #flip;
 
     constructor() {
@@ -41,6 +43,8 @@ class GameSprite {
         this.#scale = 1;
         this.#slice = new Vector2(0, 0);
         this.#frame = 0;
+
+        this.#drawOrder = 0;
 
         this.#flip = false;
     }
@@ -87,6 +91,15 @@ class GameSprite {
         this.#slice = vector;
         return this;
     }
+
+    SetDrawOrder(number) {
+        if (typeof number !== "number" || Number.isNaN(number)) {
+            throw new TypeError(`GameSprite.SetFrame : number must be a valid number`);
+        }
+        this.#drawOrder = number;
+    }
+
+    GetDrawOrder() { return this.#drawOrder; }
 
     SetFrame(number) {
         if (typeof number !== "number" || Number.isNaN(number)) {
