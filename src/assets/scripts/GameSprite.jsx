@@ -51,8 +51,6 @@ class GameSprite {
         if (imageCache[fullPath]) {
             this.#image = imageCache[fullPath].img;
             this.#imageSize = imageCache[fullPath].size;
-
-            console.log(this.#image, this.#imageSize);
         } else {
             this.#image = new Image();
             this.#image.src = fullPath;
