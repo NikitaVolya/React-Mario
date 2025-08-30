@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    
+    background: url("/public/SuperMarioBackground.png") no-repeat center center;
+    background-size: cover;
+}
+
+.settings-content {
+    font-family: 'Press Start 2P', cursive;
+    background: rgba(0, 0, 0, 0.6);
+    text-align: center;
+    color: white;
+    padding: 40px;
+    min-height: 100vh;
+}
+
+.settings-content h1 {
+    font-size: 32px;
+    margin-bottom: 40px;
+    text-shadow: 3px 3px #000;
+}
+
+.setting-item {
+    margin: 20px auto;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.setting-item label {
+    margin-bottom: 10px;
+    color: #ffd700;
+    text-shadow: 2px 2px #000;
+}
+
+.setting-item input[type="range"] {
+    width: 60%;
+    cursor: pointer;
+}
+
+.back-button {
+    margin-top: 40px;
+    padding: 12px 24px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.back-button:hover {
+    background-color: #45a049;
+}

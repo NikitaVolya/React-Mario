@@ -24,7 +24,7 @@ export default class MainMenu extends React.Component {
                         <Link to="/game" className="menu-btn">
                             Play
                         </Link>
-                        <Link to="/setting" className="menu-btn">
+                        <Link to="/settings" className="menu-btn">
                             Settings
                         </Link>
                         <Link to="/credits" className="menu-btn">

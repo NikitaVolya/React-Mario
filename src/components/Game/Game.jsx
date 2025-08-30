@@ -1,5 +1,6 @@
 import React from "react";
 import WindowScreen from "./WindowScreen";
+import { Link } from "react-router-dom";
 
 import Vector2 from "../../assets/scripts/Vector2";
 import Player from "../../assets/scripts/entities/Player";
@@ -8,31 +9,23 @@ import Entity from "../../assets/scripts/entities/Entity";
 import MapManager from "../../assets/scripts/MapManager";
 import CoinBox from "../../assets/scripts/entities/items/RewardBox";
 
+import "../../assets/styles/Game.css";
+
 
 class Game extends React.Component {
 
-    static #BlockSize = 100;
+    static #BlockSize = 50;
     static GetBlockSize() { return this.#BlockSize; }
-    static #DrawScale = 0.25;
+    static #DrawScale = 1;
     static GetDrawScale() { return this.#DrawScale; }
 
 
-    #entities = [
-        new Player(this,
-            new Vector2(Game.GetBlockSize(), Game.GetBlockSize() * 10)
-        ),
-        new Gumba(this, new Vector2(Game.GetBlockSize() * 15, Game.GetBlockSize() * 10)),
-        new Gumba(this, new Vector2(Game.GetBlockSize() * 18, Game.GetBlockSize() * 10)),
-        new CoinBox(this, new Vector2(Game.GetBlockSize() * 21, Game.GetBlockSize() * 8)),
-        new CoinBox(this, new Vector2(Game.GetBlockSize() * 23, Game.GetBlockSize() * 8)),
-        new CoinBox(this, new Vector2(Game.GetBlockSize() * 16, Game.GetBlockSize() * 8)),
-        new CoinBox(this, new Vector2(Game.GetBlockSize() * 22, Game.GetBlockSize() * 3)),
-    ];
-    #entitiesToKill = [];
+    #entities;
+    #entitiesToKill;
 
     #mapManager;
 
-    #keys = {};
+    #keys;
     #frame;
 
     #gameCicle;
@@ -43,7 +36,28 @@ class Game extends React.Component {
         this.#frame = 0;
         this.#gameCicle = true;
 
+        this.#keys = {};
+
+        this.#entities = [
+            new Player(this,
+                new Vector2(Game.GetBlockSize(), Game.GetBlockSize() * 10)
+            ),
+            new Gumba(this, new Vector2(Game.GetBlockSize() * 15, Game.GetBlockSize() * 10)),
+            new Gumba(this, new Vector2(Game.GetBlockSize() * 18, Game.GetBlockSize() * 10)),
+            new CoinBox(this, new Vector2(Game.GetBlockSize() * 21, Game.GetBlockSize() * 8)),
+            new CoinBox(this, new Vector2(Game.GetBlockSize() * 23, Game.GetBlockSize() * 8)),
+            new CoinBox(this, new Vector2(Game.GetBlockSize() * 16, Game.GetBlockSize() * 8)),
+            new CoinBox(this, new Vector2(Game.GetBlockSize() * 22, Game.GetBlockSize() * 3)),
+        ];
+        this.#entitiesToKill = [];
+
         this.#mapManager = new MapManager(this);
+
+        Game.#DrawScale = Number(localStorage.getItem("drawScale")) ?? 1;
+
+        this.state = {
+            showGameOverScreen: false
+        }
     }
 
     KillEntity(entity) {
@@ -71,6 +85,9 @@ class Game extends React.Component {
 
     StopGame() {
         this.#gameCicle = false;
+        this.setState({
+            showGameOverScreen: true
+        })
     }
 
     render() {
@@ -120,6 +137,27 @@ class Game extends React.Component {
                 gameCycle={this.#gameCicle}
                 BackgroundColor="#5c94fc"
             />
+            <Link to="/">
+                <button className="return-btn">Back to Menu</button>
+            </Link>
+            {
+                this.state.showGameOverScreen &&
+                <div className="gameover-overlay">
+                    <div className="gameover-content">
+                        <h1>GAME OVER</h1>
+                        
+                        <div className="gameover-buttons">
+                        <Link to="/">
+                            <button className="gameover-btn">Return to Menu</button>
+                        </Link>
+                        
+                        <button className="gameover-btn" onClick={(e) => window.location.reload()}>
+                            Restart Game
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            }
         </>
     }
 }

@@ -25,8 +25,8 @@ class Player extends Entity {
             )
         );
 
-        this.SetSpeed(20);
-        this.#speedBoost = 20;
+        this.SetSpeed(10);
+        this.#speedBoost = 10;
 
         this.#jumpForce = 7 * Game.GetBlockSize();
 
@@ -112,7 +112,7 @@ class Player extends Entity {
         const game = this.GetGame();
 
         const velocity = this.GetVelocity();
-        const jumpForce = -this.#jumpForce - Math.abs(velocity.GetX()) / 5;
+        const jumpForce = -this.#jumpForce - Math.abs(velocity.GetX()) / 6;
 
         if (this.#readInput)
         {

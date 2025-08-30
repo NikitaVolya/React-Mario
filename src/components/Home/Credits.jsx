@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import "../assets/styles/Credits.css";
+import "../../assets/styles/Credits.css";
 
 
 class Credits extends React.Component {
@@ -20,7 +20,7 @@ class Credits extends React.Component {
                     <p>
                         Developed by{" "}
                         <a
-                            href="https://github.com/NikitaVolya"
+                            href="https://github.com/NikitaVolya/React-Mario"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="github-link"
