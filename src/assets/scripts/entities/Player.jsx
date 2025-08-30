@@ -13,6 +13,8 @@ class Player extends Entity {
     #jumpForce;
     #speedBoost;
 
+    #readInput;
+
     constructor(game, position)
     {
         super(game, 
@@ -28,6 +30,7 @@ class Player extends Entity {
 
         this.#jumpForce = 7 * Game.GetBlockSize();
 
+        this.#readInput = true;
 
         this.GetSprite()
             .Load("/mario.png")
@@ -36,9 +39,17 @@ class Player extends Entity {
             .SetSlice(new Vector2(this.GetSize().GetX() * 0.025, this.GetSize().GetY() * -1))
             .SetFrame(0);
         
-        this.GetAnimationStateMachine().AddState(new AnimationState("walk", [0, 1, 2, 3], 0.25));
-        this.GetAnimationStateMachine().AddState(new AnimationState("idle", [0], 10));
-        this.GetAnimationStateMachine().AddState(new AnimationState("jump", [5], 10));
+        this.GetAnimationStateMachine()
+            .AddState(new AnimationState("walk", [0, 1, 2, 3], 0.25))
+            .AddState(new AnimationState("idle", [0], 1))
+            .AddState(new AnimationState("jump", [5], 1));
+
+        const gameOverState = new AnimationState("gameOver", [6, 6], 1);
+        gameOverState.OnAnimationEnd = () => {
+            this.GetGame().StopGame();
+        };
+
+        this.GetAnimationStateMachine().AddState(gameOverState)
 
         this.GetAnimationStateMachine().SelectState("walk");
 
@@ -54,9 +65,23 @@ class Player extends Entity {
                     this.SetVelocity(Vector2.TOP().Mult(this.#jumpForce))
                 }
                 else
-                    this.GetGame().StopGame();
+                {
+                    this.GetAnimationStateMachine()
+                    .SelectState("gameOver");
+                    this.GetAnimationStateMachine().SetBlockSwitch(true);
+                    
+                    this.SetVelocity(Vector2.TOP().Mult(this.#jumpForce * 2.5))
+                    this.GetColiderBox().SetCanColide(false);
+                    this.SetReadInput(false);
+                }
             }
         }
+    }
+
+    SetReadInput(value) {
+        if (typeof value !== "boolean" || Number.isNaN(value))
+            throw new TypeError("Player.SetReadInput : value must be a valid boolean");
+        this.#readInput = value;
     }
 
     #MoveControll() {
@@ -65,11 +90,13 @@ class Player extends Entity {
 
         const boost = game.GetKey(16);
         const speed = this.GetSpeed() + (boost ? this.#speedBoost : 0);
-
-        if (game.GetKey(65))
-            this.AddVelocity(new Vector2(-speed, 0));
-        if (game.GetKey(68))
-            this.AddVelocity(new Vector2(speed, 0));
+        if (this.#readInput)
+        {
+            if (game.GetKey(65))
+                this.AddVelocity(new Vector2(-speed, 0));
+            if (game.GetKey(68))
+                this.AddVelocity(new Vector2(speed, 0));
+        }
 
         const velocity = this.GetVelocity();
         if (velocity.GetX() > 0)
@@ -84,14 +111,16 @@ class Player extends Entity {
     #JumpControll() {
         const game = this.GetGame();
 
-        const boost = game.GetKey(16);
         const velocity = this.GetVelocity();
         const jumpForce = -this.#jumpForce - Math.abs(velocity.GetX()) / 5;
 
-        if (game.GetKey(87) && this.IsOnFloar())  
-            this.AddVelocity(new Vector2(0, jumpForce));
-        if (game.GetKey(87) && this.GetVelocity().GetY() < 0)
-            this.AddVelocity(new Vector2(0, jumpForce * 0.0135));
+        if (this.#readInput)
+        {
+            if (game.GetKey(87) && this.IsOnFloar())  
+                this.AddVelocity(new Vector2(0, jumpForce));
+            if (game.GetKey(87) && this.GetVelocity().GetY() < 0)
+                this.AddVelocity(new Vector2(0, jumpForce * 0.0135));
+        }
     }
 
     #UpdateAnimationStateMachine() {

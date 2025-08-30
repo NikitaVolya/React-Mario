@@ -6,7 +6,7 @@ import Player from "../../assets/scripts/entities/Player";
 import Gumba from "../../assets/scripts/entities/enemies/Gumba";
 import Entity from "../../assets/scripts/entities/Entity";
 import MapManager from "../../assets/scripts/MapManager";
-import CoinBox from "../../assets/scripts/entities/items/CoinBox";
+import CoinBox from "../../assets/scripts/entities/items/RewardBox";
 
 
 class Game extends React.Component {

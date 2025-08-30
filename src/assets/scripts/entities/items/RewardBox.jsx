@@ -26,9 +26,10 @@ class CoinBox extends Item {
         .OnColide = entity => {
             if (!(entity instanceof Player))
                 return;
-            if (entity.GetPosition().GetY() > this.GetPosition().GetY() - this.GetSize().GetY() / 10) {
+            if (entity.GetPosition().GetY() > this.GetPosition().GetY() - this.GetSize().GetY() / 10 &&
+                entity.GetVelocity().GetY() < Game.GetBlockSize()) {
                 this.GetGame().KillEntity(this);
-                console.log("COINT GET");
+                this.Use();
             }
         }
     }

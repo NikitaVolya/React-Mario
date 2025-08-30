@@ -10,6 +10,8 @@ class AnimationStateMachine {
     #currentState;
     #states;
 
+    #blockSwitch;
+
     constructor(owner) {
         if (!owner || !(owner instanceof Entity)) {
             throw new TypeError(`Owner [${this.#owner.GetId()}}] | GameSprite.Constructor : owner must be a valid Entity`);
@@ -18,6 +20,8 @@ class AnimationStateMachine {
 
         this.#currentState = null;
         this.#states = {};
+
+        this.#blockSwitch = false;
     }
 
     GetCurrentState() {
@@ -25,6 +29,9 @@ class AnimationStateMachine {
     }
 
     SelectState(name) {
+        if (this.#blockSwitch)
+            return;
+
         if (typeof name !== "string" || Number.isNaN(name))
             throw new TypeError("AnimationStateMachine.SelectState : name must be a valid string");
 
@@ -32,6 +39,13 @@ class AnimationStateMachine {
             throw new Error("AnimationStateMachine.SelectState : state not found");
         
         this.#currentState = this.#states[name];
+        return this;
+    }
+
+    SetBlockSwitch(value) {
+         if (typeof value !== "boolean" || Number.isNaN(value))
+            throw new TypeError("AnimationStateMachine.SetBlockSwitch : value must be a valid boolean");
+        this.#blockSwitch = value;
         return this;
     }
 
