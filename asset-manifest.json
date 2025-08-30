@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/mario-react/static/css/main.49e3709f.css",
+    "main.js": "/mario-react/static/js/main.247f137e.js",
+    "static/js/453.dfb5b12e.chunk.js": "/mario-react/static/js/453.dfb5b12e.chunk.js",
+    "static/media/SuperMarioBackground.png": "/mario-react/static/media/SuperMarioBackground.af0fcdcb9fda680d10a9.png",
+    "index.html": "/mario-react/index.html",
+    "main.49e3709f.css.map": "/mario-react/static/css/main.49e3709f.css.map",
+    "main.247f137e.js.map": "/mario-react/static/js/main.247f137e.js.map",
+    "453.dfb5b12e.chunk.js.map": "/mario-react/static/js/453.dfb5b12e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.49e3709f.css",
+    "static/js/main.247f137e.js"
+  ]
+}
