@@ -3,7 +3,7 @@ import WindowScreen from "./WindowScreen";
 
 import Vector2 from "../../assets/scripts/Vector2";
 import Player from "../../assets/scripts/entities/Player";
-import Gumba from "../../assets/scripts/entities/Gumba";
+import Gumba from "../../assets/scripts/entities/enemies/Gumba";
 import Entity from "../../assets/scripts/entities/Entity";
 import MapManager from "../../assets/scripts/MapManager";
 
@@ -18,11 +18,11 @@ class Game extends React.Component {
 
     #player = new Player(
         this,
-        new Vector2(100, 100)
+        new Vector2(Game.GetBlockSize(), Game.GetBlockSize() * 10)
     );
     #entities = [
-        new Gumba(this, new Vector2(800, 100)),
-        new Gumba(this, new Vector2(1000, 100)),
+        new Gumba(this, new Vector2(Game.GetBlockSize() * 15, Game.GetBlockSize() * 10)),
+        new Gumba(this, new Vector2(Game.GetBlockSize() * 18, Game.GetBlockSize() * 10)),
     ];
     #entitiesToKill = [];
 
@@ -38,6 +38,8 @@ class Game extends React.Component {
 
         this.#frame = 0;
         this.#gameCicle = true;
+
+        this.#entities[1].SetIsMovable(false);
 
         this.#mapManager = new MapManager(this);
     }
@@ -118,6 +120,7 @@ class Game extends React.Component {
                 OnKeyUp={OnKeyUp}
                 OnKeyDown={OnKeyDown}
                 gameCycle={this.#gameCicle}
+                BackgroundColor="#5c94fc"
             />
         </>
     }

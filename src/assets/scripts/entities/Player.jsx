@@ -1,6 +1,6 @@
 import Game from "../../../components/Game/Game";
 import Vector2 from "../Vector2";
-import Enemy from "./Enemy";
+import Enemy from "./enemies/Enemy";
 import Entity from "./Entity";
 
 import AnimationState from "./elements/AnimationState";
@@ -10,6 +10,7 @@ import AnimationState from "./elements/AnimationState";
 class Player extends Entity {
 
     #jumpForce;
+    #speedBoost;
 
     constructor(game, position)
     {
@@ -22,6 +23,8 @@ class Player extends Entity {
         );
 
         this.SetSpeed(20);
+        this.#speedBoost = 20;
+
         this.#jumpForce = 7 * Game.GetBlockSize();
 
 
@@ -55,18 +58,13 @@ class Player extends Entity {
         }
     }
 
-    Update(deltaTime) {
-        super.Update(deltaTime);
-
+    #MoveControll() {
+        
         const game = this.GetGame();
 
-        if (game.GetKey(87) && this.IsOnFloar())  
-            this.AddVelocity(new Vector2(0, -this.#jumpForce));
-        if (game.GetKey(87) && this.GetVelocity().GetY() < 0)
-            this.AddVelocity(new Vector2(0, -this.#jumpForce * 0.0135));
-        
-        const speed = this.GetSpeed();
-        
+        const boost = game.GetKey(16);
+        const speed = this.GetSpeed() + (boost ? this.#speedBoost : 0);
+
         if (game.GetKey(65))
             this.AddVelocity(new Vector2(-speed, 0));
         if (game.GetKey(68))
@@ -79,8 +77,24 @@ class Player extends Entity {
             this.GetSprite().SetFlip(true);
 
         if (Math.abs(velocity.GetX()) < 5)
-            this.AddVelocity(new Vector2(-velocity.GetX(), 0));
-        
+            this.SetVelocity(this.GetVelocity().SetX(0));
+    }
+
+    #JumpControll() {
+        const game = this.GetGame();
+
+        const boost = game.GetKey(16);
+        const velocity = this.GetVelocity();
+        const jumpForce = -this.#jumpForce - Math.abs(velocity.GetX()) / 5;
+
+        if (game.GetKey(87) && this.IsOnFloar())  
+            this.AddVelocity(new Vector2(0, jumpForce));
+        if (game.GetKey(87) && this.GetVelocity().GetY() < 0)
+            this.AddVelocity(new Vector2(0, jumpForce * 0.0135));
+    }
+
+    #UpdateAnimationStateMachine() {
+        const velocity = this.GetVelocity();
         const animation_state_machine = this.GetAnimationStateMachine();
         if (!this.IsOnFloar())
             animation_state_machine.SelectState("jump");
@@ -88,6 +102,15 @@ class Player extends Entity {
             animation_state_machine.SelectState("idle");
         else 
             animation_state_machine.SelectState("walk");
+    }
+
+    Update(deltaTime) {
+        super.Update(deltaTime);
+
+        this.#MoveControll();
+        this.#JumpControll();
+
+        this.#UpdateAnimationStateMachine();
     }
 }
 

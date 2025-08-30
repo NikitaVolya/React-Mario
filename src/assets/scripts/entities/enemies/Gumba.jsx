@@ -1,7 +1,7 @@
 
-import Game from "../../../components/Game/Game";
-import Vector2 from "../Vector2";
-import AnimationState from "./elements/AnimationState";
+import Game from "../../../../components/Game/Game";
+import Vector2 from "../../Vector2";
+import AnimationState from "../elements/AnimationState";
 import Enemy from "./Enemy";
 
 

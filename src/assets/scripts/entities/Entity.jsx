@@ -20,7 +20,8 @@ class Entity extends GameObject {
 
     #coliderBox;
 
-    #isOnFloar = false;
+    #isOnFloar;
+    #isMovable;
 
     constructor(game, position, size) {
 
@@ -39,9 +40,15 @@ class Entity extends GameObject {
         this.#animationStateMachine = new AnimationStateMachine(this);
 
         this.#coliderBox = new ColiderBox(this);
+
+        this.#isOnFloar = false;
+        this.#isMovable = true;
     }
 
     #VerticalMove(deltaTime) {
+        if (!this.IsMovable())
+            return;
+
         let vY = this.GetVelocity().GetY();
 
         let nextPos = this.GetPosition()
@@ -93,6 +100,9 @@ class Entity extends GameObject {
     }
 
     #HorizontalMove(deltaTime) {
+        if (!this.IsMovable())
+            return;
+
         let vX = this.GetVelocity().GetX()
 
         let nextPos = this.GetPosition()
@@ -140,13 +150,13 @@ class Entity extends GameObject {
         let drawSize = this.GetSize();
         drawSize.Mult(Game.GetDrawScale());
 
-        ctx.beginPath();
-        ctx.rect(
-            drawPosition.GetX(),
-            drawPosition.GetY(), 
-            drawSize.GetX(), 
-            drawSize.GetY()
-        );
+        // ctx.beginPath();
+        // ctx.rect(
+        //     drawPosition.GetX(),
+        //     drawPosition.GetY(), 
+        //     drawSize.GetX(), 
+        //     drawSize.GetY()
+        // );
         ctx.stroke();
 
         this.#sprite.Draw(ctx, this.GetPosition(), this.GetSize());
@@ -183,6 +193,14 @@ class Entity extends GameObject {
     GetColiderBox() { return this.#coliderBox; }
 
     IsOnFloar() { return this.#isOnFloar; }
+    IsMovable() { return this.#isMovable; }
+
+    SetIsMovable(value) {
+        if (typeof value !== "boolean" || Number.isNaN(value)) {
+            throw new TypeError(` Entity.SetIsMovable : value must be a valid boolean`);
+        }
+        this.#isMovable = value; 
+    }
 }
 
 export default Entity;
